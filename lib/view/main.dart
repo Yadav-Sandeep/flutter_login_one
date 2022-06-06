@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 import 'package:flutter_login_one/model/LoginResponse.dart';
 import 'package:flutter_login_one/presentor/presentor.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -92,7 +93,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () {
-                          var plainJsonRequestSuccess = {
+                          /*var plainJsonRequestSuccess = {
                             "channelid": "dPSKuBsjasTaMQjPdZjP",
                             "appid": "com.nsdl.mfino",
                             "partnerid": "NSDLAGENCY0001",
@@ -126,6 +127,44 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                             "signcs": "cbUEdWmKxDomAgXTzVoT1sBxKvwIFx4iZ5BqdqiaMinI20v2KOY02YgQStmbOh52PirZ+HfbPmEroY1iiZUmwQ=="
                           };
                           String plainJsonEncode = jsonEncode(plainJsonRequestSuccess);
+                          print("Request- " + plainJsonEncode);
+                          _loginScreenPresenter?.postLogin(plainJsonEncode);*/
+
+                          String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
+                          channelId = "dPSKuBsjasTaMQjPdZjP";
+                          appId = "com.nsdl.mfino";
+                          partnerId = "NSDLAGENCY0001";
+                          mobileNo = "918108968981";
+                          type = "PARTNER";
+                          email = "saurabha@nsdlbank.co.in";
+                          password = "12345@Uat";
+                          token = "NA";
+                          signcs = "";
+
+                          String passKey = 'yYxeaKPojTwCJdFMSSiGKmzkpJxgfDJSQETgglGteGguzFtLMLdJtwVnhvKFNZHzYPipOLGxYPAKrswBVbpYzeFyAemtKNtCVPjOQzJkbdUkpRoCXAeNDNyYuUjZYzAu';
+                          String checksumSeq = channelId + appId + partnerId + mobileNo + type +
+                                              email + password + token;
+
+                          List<int> messageBytes = utf8.encode(checksumSeq);
+                          List<int> key = base64.decode(passKey);
+                          Hmac hmac = Hmac(sha512, key);
+                          Digest digest = hmac.convert(messageBytes);
+
+                          String base64Mac = base64.encode(digest.bytes);
+                          print("Seq- " + checksumSeq);
+                          var plainJsonRequest = {
+                            "channelid": channelId,
+                            "appid": appId,
+                            "partnerid": partnerId,
+                            "mobileno": mobileNo,
+                            "type": type,
+                            "emailid": email,
+                            "password": password,
+                            "token": token,
+                            "signcs": base64Mac
+                          };
+                          print("TEST- " + base64Mac);
+                          String plainJsonEncode = jsonEncode(plainJsonRequest);
                           print("Request- " + plainJsonEncode);
                           _loginScreenPresenter?.postLogin(plainJsonEncode);
                         },
