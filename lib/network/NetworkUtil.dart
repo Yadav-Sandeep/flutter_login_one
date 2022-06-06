@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'LoginResponse.dart';
+import '../model/LoginResponse.dart';
 
 class NetworkUtil {
   static NetworkUtil _instance = NetworkUtil.internal();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:flutter_login_one/LoginResponse.dart';
-import 'package:flutter_login_one/presentor.dart';
+import 'package:flutter_login_one/model/LoginResponse.dart';
+import 'package:flutter_login_one/presentor/presentor.dart';
 
 void main() {
   runApp(const MyApp());

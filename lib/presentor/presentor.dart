@@ -1,5 +1,5 @@
-import 'package:flutter_login_one/LoginResponse.dart';
-import 'RestDataSource.dart';
+import 'package:flutter_login_one/model/LoginResponse.dart';
+import '../network/RestDataSource.dart';
 
 abstract class LoginContract {
   void onLoginSuccess(LoginResponse response);

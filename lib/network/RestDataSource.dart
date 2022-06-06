@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'LoginResponse.dart';
+import '../model/LoginResponse.dart';
 import 'NetworkUtil.dart';
 
 
