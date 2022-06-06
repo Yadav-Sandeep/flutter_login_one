@@ -4,6 +4,8 @@ import 'package:flutter_login_one/presentor/presentor.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,6 +20,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> implements LoginContract{
 
   LoginScreenPresenter? _loginScreenPresenter;
+  final TextEditingController emailIdText = TextEditingController();
+  final TextEditingController passwordText = TextEditingController();
 
   _MyAppState() {
     _loginScreenPresenter = LoginScreenPresenter(this);
@@ -55,6 +59,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: TextFormField(
+                        controller: emailIdText,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             labelText: 'Email',
@@ -73,6 +78,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: TextFormField(
+                        controller: passwordText,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                             labelText: 'Password',
@@ -93,80 +99,62 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () {
-                          /*var plainJsonRequestSuccess = {
-                            "channelid": "dPSKuBsjasTaMQjPdZjP",
-                            "appid": "com.nsdl.mfino",
-                            "partnerid": "NSDLAGENCY0001",
-                            "mobileno": "918108968981",
-                            "type": "PARTNER",
-                            "emailid": "saurabha@nsdlbank.co.in",
-                            "password": "12345@Uat",
-                            "token": "NA",
-                            "signcs": "iTK0BHmO9JZldBUeKOdLrmdDVGekP8UvTnLGRfoHBABGyL27voaHbnILD5InEwVS56hKyNzsw33zfx6Z9C1LDw=="
-                          };
-                          var plainJsonRequestInvalidCred = {
-                            "channelid": "dPSKuBsjasTaMQjPdZjP",
-                            "appid": "com.nsdl.mfino",
-                            "partnerid": "NSDL543581325114",
-                            "mobileno": "918108968981",
-                            "type": "PARTNER",
-                            "emailid": "saurabha@nsdlbank.co.in",
-                            "password": "123fgh",
-                            "token": "NA",
-                            "signcs": "cbUEdWmKxDomAgXTzVoT1sBxKvwIFx4iZ5BqdqiaMinI20v2KOY02YgQStmbOh52PirZ+HfbPmEroY1iiZUmwQ=="
-                          };
-                          var plainJsonRequestChecksumIssue = {
-                            "channelid": "dPSKuBsjasTaMQjPdZjP",
-                            "appid": "com.nsdl.mfinoooo",
-                            "partnerid": "NSDL543581325114",
-                            "mobileno": "918108968981",
-                            "type": "PARTNER",
-                            "emailid": "saurabha@nsdlbank.co.in",
-                            "password": "123fgh",
-                            "token": "NA",
-                            "signcs": "cbUEdWmKxDomAgXTzVoT1sBxKvwIFx4iZ5BqdqiaMinI20v2KOY02YgQStmbOh52PirZ+HfbPmEroY1iiZUmwQ=="
-                          };
-                          String plainJsonEncode = jsonEncode(plainJsonRequestSuccess);
-                          print("Request- " + plainJsonEncode);
-                          _loginScreenPresenter?.postLogin(plainJsonEncode);*/
-
                           String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
-                          channelId = "dPSKuBsjasTaMQjPdZjP";
-                          appId = "com.nsdl.mfino";
-                          partnerId = "NSDLAGENCY0001";
-                          mobileNo = "918108968981";
-                          type = "PARTNER";
-                          email = "saurabha@nsdlbank.co.in";
-                          password = "12345@Uat";
-                          token = "NA";
-                          signcs = "";
+                          email = emailIdText.text;
+                          password = passwordText.text;
+                          bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
 
-                          String passKey = 'yYxeaKPojTwCJdFMSSiGKmzkpJxgfDJSQETgglGteGguzFtLMLdJtwVnhvKFNZHzYPipOLGxYPAKrswBVbpYzeFyAemtKNtCVPjOQzJkbdUkpRoCXAeNDNyYuUjZYzAu';
-                          String checksumSeq = channelId + appId + partnerId + mobileNo + type +
-                                              email + password + token;
+                          if(email.isEmpty){
+                            Fluttertoast.showToast(
+                                msg: "Enter Email Id!!",
+                                toastLength: Toast.LENGTH_SHORT
+                            );
+                          }else if(email.isNotEmpty && !isValidEmail){
+                            Fluttertoast.showToast(
+                                msg: "Enter Valid Email Id!!",
+                                toastLength: Toast.LENGTH_SHORT
+                            );
+                          }else if(password.isEmpty){
+                            Fluttertoast.showToast(
+                                msg: "Enter Password!!",
+                                toastLength: Toast.LENGTH_SHORT
+                            );
+                          }else{
+                            channelId = "dPSKuBsjasTaMQjPdZjP";
+                            appId = "com.nsdl.mfino";
+                            partnerId = "NSDLAGENCY0001";
+                            mobileNo = "918108968981";
+                            type = "PARTNER";
+                            token = "NA";
+                            signcs = "";
 
-                          List<int> messageBytes = Utf8Encoder().convert(checksumSeq);
-                          List<int> key = Utf8Encoder().convert(passKey);
-                          Hmac hmac = Hmac(sha512, key);
-                          Digest digest = hmac.convert(messageBytes);
+                            String passKey = 'yYxeaKPojTwCJdFMSSiGKmzkpJxgfDJSQETgglGteGguzFtLMLdJtwVnhvKFNZHzYPipOLGxYPAKrswBVbpYzeFyAemtKNtCVPjOQzJkbdUkpRoCXAeNDNyYuUjZYzAu';
+                            String checksumSeq = channelId + appId + partnerId + mobileNo + type +
+                                email + password + token;
 
-                          String base64Mac = base64.encode(digest.bytes);
-                          print("Seq- " + checksumSeq);
-                          var plainJsonRequest = {
-                            "channelid": channelId,
-                            "appid": appId,
-                            "partnerid": partnerId,
-                            "mobileno": mobileNo,
-                            "type": type,
-                            "emailid": email,
-                            "password": password,
-                            "token": token,
-                            "signcs": base64Mac
-                          };
-                          print("TEST- " + base64Mac);
-                          String plainJsonEncode = jsonEncode(plainJsonRequest);
-                          print("Request- " + plainJsonEncode);
-                          _loginScreenPresenter?.postLogin(plainJsonEncode);
+                            List<int> messageBytes = Utf8Encoder().convert(checksumSeq);
+                            List<int> key = Utf8Encoder().convert(passKey);
+                            Hmac hmac = Hmac(sha512, key);
+                            Digest digest = hmac.convert(messageBytes);
+
+                            String base64Mac = base64.encode(digest.bytes);
+                            print("Seq- " + checksumSeq);
+                            var plainJsonRequest = {
+                              "channelid": channelId,
+                              "appid": appId,
+                              "partnerid": partnerId,
+                              "mobileno": mobileNo,
+                              "type": type,
+                              "emailid": email,
+                              "password": password,
+                              "token": token,
+                              "signcs": base64Mac
+                            };
+                            print("TEST- " + base64Mac);
+                            String plainJsonEncode = jsonEncode(plainJsonRequest);
+                            print("Request- " + plainJsonEncode);
+                            _loginScreenPresenter?.postLogin(plainJsonEncode);
+                          }
                         },
                         child: Text('Login'),
                         color: Colors.teal,
@@ -186,11 +174,19 @@ class _MyAppState extends State<MyApp> implements LoginContract{
   @override
   void onLoginError(String errorTxt) {
     print("Error Text- " + errorTxt);
+    Fluttertoast.showToast(
+        msg: "Failed: "+ errorTxt,
+        toastLength: Toast.LENGTH_SHORT
+    );
   }
 
   @override
   void onLoginSuccess(LoginResponse response) {
     print("Response :- " + jsonEncode(response));
+    Fluttertoast.showToast(
+        msg: "Succcess: "+ response.fullName.toString(),
+        toastLength: Toast.LENGTH_SHORT
+    );
   }
 }
 
