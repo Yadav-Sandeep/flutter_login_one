@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter_login_one/view/CommonData.dart';
+
 import '../model/LoginResponse.dart';
 import 'NetworkUtil.dart';
 
@@ -6,11 +8,9 @@ import 'NetworkUtil.dart';
 class RestDataSource {
   NetworkUtil _netUtil = new NetworkUtil();
 
-  var baseURL = "https://Jiffyuat.nsdlbank.co.in";
-
   Future<LoginResponse> postLogin(String body) {
     return _netUtil
-        .post(baseURL + '/jarvisgwy/broker/agentlogin',
+        .post(CommonData().url + '/jarvisgwy/broker/agentlogin',
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
           'Charset': 'utf-8'
