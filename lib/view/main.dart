@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -99,6 +99,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                       child: MaterialButton(
                         minWidth: double.infinity,
                         onPressed: () {
+
                           String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
                           email = emailIdText.text;
                           password = passwordText.text;
@@ -120,6 +121,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                                 toastLength: Toast.LENGTH_SHORT
                             );
                           }else{
+                            FocusScope.of(context).unfocus();
+                            showLoaderDialog(context);
                             channelId = "dPSKuBsjasTaMQjPdZjP";
                             appId = "com.nsdl.mfino";
                             partnerId = "NSDLAGENCY0001";
@@ -182,6 +185,22 @@ class _MyAppState extends State<MyApp> implements LoginContract{
     );
   }
 
+  showLoaderDialog(BuildContext context){
+    AlertDialog alert=AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(margin: EdgeInsets.only(left: 20),child:Text("Loading..." )),
+        ],),
+    );
+    showDialog(barrierDismissible: false,
+      context:context,
+      builder:(BuildContext context){
+        return alert;
+      },
+    );
+  }
+
   @override
   void onLoginError(String errorTxt) {
     print("Error Text- " + errorTxt);
@@ -189,6 +208,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         msg: "Failed: "+ errorTxt,
         toastLength: Toast.LENGTH_SHORT
     );
+    Navigator.pop(context);
   }
 
   @override
@@ -198,6 +218,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         msg: "Succcess: "+ response.fullName.toString(),
         toastLength: Toast.LENGTH_SHORT
     );
+    Navigator.pop(context);
   }
 }
 
