@@ -145,8 +145,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                           String checksumSeq = channelId + appId + partnerId + mobileNo + type +
                                               email + password + token;
 
-                          List<int> messageBytes = utf8.encode(checksumSeq);
-                          List<int> key = base64.decode(passKey);
+                          List<int> messageBytes = Utf8Encoder().convert(checksumSeq);
+                          List<int> key = Utf8Encoder().convert(passKey);
                           Hmac hmac = Hmac(sha512, key);
                           Digest digest = hmac.convert(messageBytes);
 
