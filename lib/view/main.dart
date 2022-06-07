@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_one/model/LoginResponse.dart';
 import 'package:flutter_login_one/presentor/presentor.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter_login_one/view/CommonData.dart';
 import 'dart:convert';
 
 import 'package:fluttertoast/fluttertoast.dart';
@@ -131,28 +132,11 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                             token = "NA";
                             signcs = "";
 
-                            String passKey = 'yYxeaKPojTwCJdFMSSiGKmzkpJxgfDJSQETgglGteGguzFtLMLdJtwVnhvKFNZHzYPipOLGxYPAKrswBVbpYzeFyAemtKNtCVPjOQzJkbdUkpRoCXAeNDNyYuUjZYzAu';
                             String checksumSeq = channelId + appId + partnerId + mobileNo + type +
                                 email + password + token;
 
-                            //convert into byteArray using below three methods
-                            /*List<int> bytes = utf8.encode(passKey);
-                          print(bytes11);*/
-
-                            /*List<int> bytes = passKey.codeUnits;
-                          print(bytes);*/
-
-                            List<int> bytes = passKey.runes.toList();
-                            print(bytes);
-
-                            //Utf8Encoder:-This class converts strings to their UTF-8 code units (a list of unsigned 8-bit integers).
-                            List<int> messageBytes = Utf8Encoder().convert(checksumSeq);
-                            List<int> key = Utf8Encoder().convert(passKey);
-                            Hmac hmac = Hmac(sha512, key);
-                            Digest digest = hmac.convert(messageBytes);
-
-                            String base64Mac = base64.encode(digest.bytes);
-                            print("Seq- " + checksumSeq);
+                            String signCs = CommonData().getCheckSum(checksumSeq);
+                            print("Seq- " + signCs);
                             var plainJsonRequest = {
                               "channelid": channelId,
                               "appid": appId,
@@ -162,9 +146,9 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                               "emailid": email,
                               "password": password,
                               "token": token,
-                              "signcs": base64Mac
+                              "signcs": signCs
                             };
-                            print("TEST- " + base64Mac);
+                            print("TEST- " + signCs);
                             String plainJsonEncode = jsonEncode(plainJsonRequest);
                             print("Request- " + plainJsonEncode);
                             _loginScreenPresenter?.postLogin(plainJsonEncode);
