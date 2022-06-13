@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_one/model/LoginResponse.dart';
 import 'package:flutter_login_one/presentor/presentor.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter_login_one/view/CommonData.dart';
 import 'dart:convert';
 
@@ -23,6 +22,14 @@ class _MyAppState extends State<MyApp> implements LoginContract{
   LoginScreenPresenter? _loginScreenPresenter;
   final TextEditingController emailIdText = TextEditingController();
   final TextEditingController passwordText = TextEditingController();
+
+  bool _isVisible = true;
+
+  void showToast() {
+    setState(() {
+      _isVisible = !_isVisible;
+    });
+  }
 
   _MyAppState() {
     _loginScreenPresenter = LoginScreenPresenter(this);
@@ -97,66 +104,69 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 80),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        onPressed: () {
+                      child: Visibility(
+                        visible: _isVisible,
+                        child: MaterialButton(
+                          minWidth: double.infinity,
+                          onPressed: () {
 
-                          String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
-                          email = emailIdText.text;
-                          password = passwordText.text;
-                          bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+                            String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
+                            email = emailIdText.text;
+                            password = passwordText.text;
+                            bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
 
-                          if(email.isEmpty){
-                            Fluttertoast.showToast(
-                                msg: "Enter Email Id!!",
-                                toastLength: Toast.LENGTH_SHORT
-                            );
-                          }else if(email.isNotEmpty && !isValidEmail){
-                            Fluttertoast.showToast(
-                                msg: "Enter Valid Email Id!!",
-                                toastLength: Toast.LENGTH_SHORT
-                            );
-                          }else if(password.isEmpty){
-                            Fluttertoast.showToast(
-                                msg: "Enter Password!!",
-                                toastLength: Toast.LENGTH_SHORT
-                            );
-                          }else{
-                            FocusScope.of(context).unfocus();
-                            showLoaderDialog(context);
-                            channelId = "dPSKuBsjasTaMQjPdZjP";
-                            appId = "com.nsdl.mfino";
-                            partnerId = "NSDLAGENCY0001";
-                            mobileNo = "918108968981";
-                            type = "PARTNER";
-                            token = "NA";
-                            signcs = "";
+                            if(email.isEmpty){
+                              Fluttertoast.showToast(
+                                  msg: "Enter Email Id!!",
+                                  toastLength: Toast.LENGTH_SHORT
+                              );
+                            }else if(email.isNotEmpty && !isValidEmail){
+                              Fluttertoast.showToast(
+                                  msg: "Enter Valid Email Id!!",
+                                  toastLength: Toast.LENGTH_SHORT
+                              );
+                            }else if(password.isEmpty){
+                              Fluttertoast.showToast(
+                                  msg: "Enter Password!!",
+                                  toastLength: Toast.LENGTH_SHORT
+                              );
+                            }else{
+                              FocusScope.of(context).unfocus();
+                              showLoaderDialog(context);
+                              channelId = "dPSKuBsjasTaMQjPdZjP";
+                              appId = "com.nsdl.mfino";
+                              partnerId = "NSDLAGENCY0001";
+                              mobileNo = "918108968981";
+                              type = "PARTNER";
+                              token = "NA";
+                              signcs = "";
 
-                            String checksumSeq = channelId + appId + partnerId + mobileNo + type +
-                                email + password + token;
+                              String checksumSeq = channelId + appId + partnerId + mobileNo + type +
+                                  email + password + token;
 
-                            String signCs = CommonData().getCheckSum(checksumSeq);
-                            print("Seq- " + signCs);
-                            var plainJsonRequest = {
-                              "channelid": channelId,
-                              "appid": appId,
-                              "partnerid": partnerId,
-                              "mobileno": mobileNo,
-                              "type": type,
-                              "emailid": email,
-                              "password": password,
-                              "token": token,
-                              "signcs": signCs
-                            };
-                            print("TEST- " + signCs);
-                            String plainJsonEncode = jsonEncode(plainJsonRequest);
-                            print("Request- " + plainJsonEncode);
-                            _loginScreenPresenter?.postLogin(plainJsonEncode);
-                          }
-                        },
-                        child: Text('Login'),
-                        color: Colors.teal,
-                        textColor: Colors.white,
+                              String signCs = CommonData().getCheckSum(checksumSeq);
+                              print("Seq- " + signCs);
+                              var plainJsonRequest = {
+                                "channelid": channelId,
+                                "appid": appId,
+                                "partnerid": partnerId,
+                                "mobileno": mobileNo,
+                                "type": type,
+                                "emailid": email,
+                                "password": password,
+                                "token": token,
+                                "signcs": signCs
+                              };
+                              print("TEST- " + signCs);
+                              String plainJsonEncode = jsonEncode(plainJsonRequest);
+                              print("Request- " + plainJsonEncode);
+                              _loginScreenPresenter?.postLogin(plainJsonEncode);
+                            }
+                          },
+                          child: Text('Login'),
+                          color: Colors.teal,
+                          textColor: Colors.white,
+                        ),
                       ),
                     )
                   ],
@@ -193,6 +203,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         toastLength: Toast.LENGTH_SHORT
     );
     Navigator.pop(context);
+    showToast();
   }
 
   @override
@@ -203,6 +214,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         toastLength: Toast.LENGTH_SHORT
     );
     Navigator.pop(context);
+    showToast();
   }
 }
 
