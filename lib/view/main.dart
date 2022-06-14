@@ -5,6 +5,9 @@ import 'package:flutter_login_one/view/CommonData.dart';
 import 'dart:convert';
 
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
+
+import 'login_screen.dart';
 
 void main() {
   runApp(MaterialApp(home: MyApp()));
@@ -45,8 +48,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Login Screen'),
-          backgroundColor: Color(0xFFEFC227),
+          title: Center(child: const Text('NSDL Assisted App')),
+          backgroundColor: Color(0xFFF6A821),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +59,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
               'Login',
               style: TextStyle(
                   fontSize: 35,
-                  color: Colors.teal,
+                  color: Color(0xFFF6A821),
                   fontWeight: FontWeight.bold),
             ),
             Padding(
@@ -203,7 +206,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         toastLength: Toast.LENGTH_SHORT
     );
     Navigator.pop(context);
-    showToast();
+    //showToast();
   }
 
   @override
@@ -213,8 +216,16 @@ class _MyAppState extends State<MyApp> implements LoginContract{
         msg: "Succcess: "+ response.fullName.toString(),
         toastLength: Toast.LENGTH_SHORT
     );
-    Navigator.pop(context);
-    showToast();
+    //Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: LoginScreen(response.sessiontokendtls!.tokenkey.toString()),
+        //child: LoginScreen(response.fullName.toString()),
+      ),
+    );
+    //showToast();
   }
 }
 
