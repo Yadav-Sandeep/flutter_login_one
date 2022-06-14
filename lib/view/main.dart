@@ -221,8 +221,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
       context,
       PageTransition(
         type: PageTransitionType.fade,
-        child: LoginScreen(response.sessiontokendtls!.tokenkey.toString()),
-        //child: LoginScreen(response.fullName.toString()),
+        //child: LoginScreen(response.sessiontokendtls!.tokenkey.toString()),
+        child: LoginScreen(response.fullName.toString()),
       ),
     );
     //showToast();
