@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login_one/model/LoginResponse.dart';
 import 'package:flutter_login_one/presentor/presentor.dart';
 import 'package:flutter_login_one/view/CommonData.dart';
@@ -25,6 +26,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
   LoginScreenPresenter? _loginScreenPresenter;
   final TextEditingController emailIdText = TextEditingController();
   final TextEditingController passwordText = TextEditingController();
+
+  static const MethodChannel platform = MethodChannel('nsdlpbPlatformChannel');
 
   bool _isVisible = true;
 
@@ -113,7 +116,7 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                           minWidth: double.infinity,
                           onPressed: () {
 
-                            String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
+                            /*String channelId, appId, partnerId, mobileNo, type, email, password, token, signcs = "" ;
                             email = emailIdText.text;
                             password = passwordText.text;
                             bool isValidEmail = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
@@ -164,7 +167,8 @@ class _MyAppState extends State<MyApp> implements LoginContract{
                               String plainJsonEncode = jsonEncode(plainJsonRequest);
                               print("Request- " + plainJsonEncode);
                               _loginScreenPresenter?.postLogin(plainJsonEncode);
-                            }
+                            }*/
+                            callAadhaarSdk("tttt");
                           },
                           child: Text('Login'),
                           color: Colors.teal,
@@ -226,6 +230,27 @@ class _MyAppState extends State<MyApp> implements LoginContract{
       ),
     );
     //showToast();
+  }
+
+  Future<void> callAadhaarSdk(String token) async {
+    try {
+      List<String> args = [];
+      args.add("hdfhdfdsbfjdsbfjds");
+      args.add("test");
+      final String? returnStr = await platform.invokeMethod('callAadhaarSdk', args);
+      if(returnStr != null) {
+        List<String> returnValue = returnStr.split('||');
+        if (returnValue[0] == 'error') {
+          print(returnValue[0]);
+        }
+        else {
+          print(returnValue[0]);
+        }
+      }
+    } on PlatformException catch (e) {
+      print(e);
+
+    }
   }
 }
 

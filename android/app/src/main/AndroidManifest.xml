@@ -5,7 +5,8 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="flutter_login_one">
+        android:label="flutter_login_one"
+        android:theme="@style/Theme.AppCompat">
         <activity
             android:name=".NativeActivity"
             android:exported="false"
@@ -16,7 +17,7 @@
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:theme="@style/LaunchTheme"
+            android:theme="@style/Theme.AppCompat"
             android:windowSoftInputMode="adjustResize">
 
             <!--
